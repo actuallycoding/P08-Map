@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,8 +23,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 public class MainActivity extends AppCompatActivity {
-    Button btn1, btn2, btn3;
+    //    Button btn1, btn2, btn3;
+    Spinner spn;
     private GoogleMap map;
 
     @Override
@@ -39,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
-                        Toast toast = Toast.makeText(getBaseContext(),marker.getTitle(),Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getBaseContext(), marker.getTitle(), Toast.LENGTH_SHORT);
                         toast.show();
                         return false;
                     }
@@ -90,8 +95,41 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        btn1 = (Button) findViewById(R.id.btn1);
-        btn2 = (Button) findViewById(R.id.btn2);
+
+        spn = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.directions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spn.setAdapter(adapter);
+        spn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (map != null) {
+                    if (position == 0) {
+                        LatLng poi_North = new LatLng(1.436065, 103.800975);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(poi_North,
+                                15));
+                    } else if (position == 1) {
+                        LatLng poi_Central = new LatLng(1.303841, 103.833052);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(poi_Central,
+                                15));
+                    } else {
+                        LatLng poi_East = new LatLng(1.352614, 103.944693);
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(poi_East,
+                                15));
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        /*
+        btn1 = (Button) findViewById(btn1);
+        btn2 = (Button) findViewById(btn2);
         btn3 = (Button) findViewById(R.id.btn3);
 
         btn1.setOnClickListener(new View.OnClickListener() {
@@ -119,13 +157,13 @@ public class MainActivity extends AppCompatActivity {
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (map != null) {
+                 if (map != null) {
                     LatLng poi_East = new LatLng(1.352614, 103.944693);
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(poi_East,
                             15));
                 }
             }
         });
-
+        */
     }
 }
